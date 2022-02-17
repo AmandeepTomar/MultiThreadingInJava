@@ -1,0 +1,8 @@
+This is file a.txt
+Serial Mode -
+In the below example we are making a direct call to copyFile and it is executed in serial order i.e. first Copy a.txt to c.txt is executed and then once it is done, the next copy i.e. b.txt to d.txt will be initiated.
+
+Note - For this program to work you need to create two files a.txt and b.txt in the src/ folder and place some content in it.
+
+Parallel Mode -
+The two copy operations above are initiated through two different threads, which enables us to perform the operation in parallel. For this we defined a CopyTask which is a Runnable task, you should pass the source and the destination to the constructor which are then used to perform the copy operation once the task execution begins.
