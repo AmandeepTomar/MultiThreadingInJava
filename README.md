@@ -134,7 +134,80 @@ interface Callable<E> {
 
 - `cancel(boolean mayInterrupt)` - Used to stop the task, stops it immediately if not started, otherwise interrupts the task only if mayInterrupt is true.
 
+## Concurrency 
+- `synchronized` this make the method thread safe.
+```java
+    static int a=0;
+    private int b;
+// This method is not thread safe because synchronized lock b because it is object while a is static so its not locked that so problem with a.
+   public synchronized void increment(){
+          b++;
+          a++;
+      }
+  }
+  
+  // solution
+```
+## Deadlock and solution 
+- lock should be used in the same manned both side ,
+- like if pen locked first then need to lock pen first in other Writer too.
+- here first write lock the book and the Thread go to sleep context changes and now writer2
+- lock the pen so deadlock situation is arrived, to fix this we need to provide the resource in same manner.
+- for both object book first then pen.
+```java
+// Code from Thread2
+          synchronized (book){
+                  try {
+                  Thread.sleep(100);
+                  } catch (InterruptedException e) {
+                  e.printStackTrace();
+                  }
+          synchronized (pen){
+                  System.out.println("Writer 1 writing book");
+                  }
+                  }
 
 
+// Code from thread2
+    //        synchronized (pen){
+//            synchronized (book){
+//                System.out.println("Writer 2 writing book");
+//            }
+//        }
+// Solved deal lock by providing lock in same manner
+      synchronized (book){
+      synchronized (pen){
+              System.out.println("Writer 2 writing book");
+              }
+              }  
+
+```
+
+## Reentrant lock
+- Read/Write lock 
+- readLock allows us to lock the object for read operation, and the interesting point is that the read operation can be shared i.e if two threads are waiting for readLock then both of them can proceed forward with the operation as read operation doesn't change the data.
+- Where as writeLock is mutually exclusive i.e. if a writeLock is accepted then all the other lock requests should wait till the thread that owns the lock releases it.
+ 
+- For example let us assume the following chronologically ordered lock requests
+
+T1 -> lock.readLock();
+
+T2 -> lock.readLock();
+
+T3 -> lock.readLock();
+
+T4 -> lock.writeLock();
+
+T5 -> lock.readLock();
+
+Here T1, T2, T3 can share the readLock and proceed forward with the operation.  Where T4 should wait till T1, T2 and T3 unlocks.
+
+Why T5 is waiting ?
+
+Because writeLock is requested by T4 before its request and hence all subsequent requests to read/write locks should wait.
+
+This is in contrast to synchronized methods/blocks because for synchronized method/block there is no segregation of read and write operations. Object is locked no matter whether it is read or write.
+
+Caution - It is always better to put the unlock operation in finally, as you need to unlock irrespective of exceptions.
 ### References 
 - https://udemy.com/course/java-multi-threading-by-sagar
