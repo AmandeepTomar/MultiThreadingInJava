@@ -209,5 +209,15 @@ Because writeLock is requested by T4 before its request and hence all subsequent
 This is in contrast to synchronized methods/blocks because for synchronized method/block there is no segregation of read and write operations. Object is locked no matter whether it is read or write.
 
 Caution - It is always better to put the unlock operation in finally, as you need to unlock irrespective of exceptions.
+
+### Thread Signalling 
+
+- Thread signalling using wait() and notify() -
+- wait() method Releases the lock over the object and takes the thread to WAITING state. And the thread remains in that state until some other thread calls the notify() method over the same object. Once notify() is invoked it ends the wait for one single thread and takes the thread to BLOCKED state where the thread remains in that state till the lock is obtained. wait() only returns after obtaining the lock.
+- wait(long millis)  slightly differs, as it takes thread to TIMED_WAITING and waits only for the specified duration.
+
+notify() - notifies one single thread where as notifyAll() notifies all the threads waiting for the signal.
+
+
 ### References 
 - https://udemy.com/course/java-multi-threading-by-sagar
