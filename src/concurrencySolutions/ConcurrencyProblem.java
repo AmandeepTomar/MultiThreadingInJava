@@ -1,7 +1,7 @@
 package concurrencySolutions;
 
 class Counter{
-    private int x;
+    private volatile int x;
 
    public int getX(){
        return this.x;
@@ -15,6 +15,7 @@ class Counter{
     public synchronized void increment() throws InterruptedException {
        int y=getX();
        y++;
+       notifyAll();
        Thread.sleep(100);
        setX(y);
     }
@@ -28,6 +29,9 @@ class  MyThread implements Runnable{
     @Override
     public void run() {
         try {
+            while (counter.getX()<100){
+                counter.wait();
+            }
             counter.increment();
         } catch (InterruptedException e) {
             e.printStackTrace();
